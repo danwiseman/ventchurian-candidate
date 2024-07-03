@@ -2,6 +2,11 @@ from typing import List, Literal, TypedDict
 
 Mode = Literal['heat', 'ac']
 
+FULLY_OPEN = 100
+FULLY_CLOSED = 0
+HALF_OPEN = 50
+MOSTLY_OPEN = 75
+MOSTLY_CLOSED = 25
 
 class RoomTemperature(TypedDict):
     room: str
@@ -10,10 +15,11 @@ class RoomTemperature(TypedDict):
 
 class VentControl:
     def open_vent(self, room: str) -> None:
-        self.set_vent_percentage(room, 0)
+        self.set_vent_percentage(room, FULLY_OPEN)
+
 
     def close_vent(self, room: str) -> None:
-        self.set_vent_percentage(room, 100)
+        self.set_vent_percentage(room, FULLY_CLOSED)
 
     def set_vent_percentage(self, room: str, percentage: float) -> None:
         # TODO document why this method is empty
@@ -37,8 +43,8 @@ def adjust_vents(room_temperatures: List[RoomTemperature], goal_temperature: flo
     # If all vents are on the desired side of the goal temp for two of the rooms
     # that are closest to the goal temp, set those vents to 50%
     if len(sorted_desired_side_rooms) == len(room_temperatures) and len(sorted_desired_side_rooms) >= 2:
-        vent_control.set_vent_percentage(sorted_desired_side_rooms[0]['room'], 50)
-        vent_control.set_vent_percentage(sorted_desired_side_rooms[1]['room'], 50)
+        vent_control.set_vent_percentage(sorted_desired_side_rooms[0]['room'], HALF_OPEN)
+        vent_control.set_vent_percentage(sorted_desired_side_rooms[1]['room'], HALF_OPEN)
         sorted_desired_side_rooms = sorted_desired_side_rooms[2:]
 
     for rt in sorted_desired_side_rooms:
